@@ -6,7 +6,6 @@ var bodyParser = require('body-parser')
 var express = require('express')
 var app = express()
 
-var request = require('request')
 var mongoose = require('mongoose')
 var Book = require("./models/BookModel")
 var Person = require("./models/PersonModel")
@@ -20,46 +19,46 @@ app.use(bodyParser.json())
 /*=====================================================
 Create books Collection
 =======================================================*/
-// var isbns = [9780156012195, 9780743273565, 9780435905484, 9780140275360, 9780756404741, 9780756407919, 9780140177398, 9780316769488, 9780062225672, 9780143130154, 9780307455925, 9781501143519]
-// var url = "https://www.googleapis.com/books/v1/volumes?q=isbn:"
+var isbns = [9780156012195, 9780743273565, 9780435905484, 9780140275360, 9780756404741, 9780756407919, 9780140177398, 9780316769488, 9780062225672, 9780143130154, 9780307455925, 9781501143519]
+var url = "https://www.googleapis.com/books/v1/volumes?q=isbn:"
 
-// for (var i = 0; i < isbns.length; i++) {
-//   var apiURL = url + isbns[i];
+for (var i = 0; i < isbns.length; i++) {
+  var apiURL = url + isbns[i];
   /*=====================================================
   the first time you run your code, uncomment the function below.
   for subsequent runs, re-comment it so that it runs only once!
   that said, there is a fail-safe to avoid duplicates below
   =======================================================*/
-//   loadFromAPI(apiURL)
-// }
-// console.log("done");
+  loadFromAPI(apiURL)
+}
+console.log("done");
 
-// function loadFromAPI(apiURL) {
+function loadFromAPI(apiURL) {
 
-//   request(apiURL, function(error, response, body) {
+  request(apiURL, function(error, response, body) {
 
-//     var result = JSON.parse(body)
+    var result = JSON.parse(body)
 
-//     if (result.totalItems && !error && response.statusCode == 200) {
-//       var resBook = JSON.parse(body).items[0].volumeInfo
+    if (result.totalItems && !error && response.statusCode == 200) {
+      var resBook = JSON.parse(body).items[0].volumeInfo
 
-//       var book = new Book({
-//         title: resBook.title,
-//         author: resBook.authors ? resBook.authors[0] : '',
-//         pages: resBook.pageCount,
-//         genres: resBook.categories || ["Other"],
-//         rating: resBook.averageRating || 5
-//       })
+      var book = new Book({
+        title: resBook.title,
+        author: resBook.authors ? resBook.authors[0] : '',
+        pages: resBook.pageCount,
+        genres: resBook.categories || ["Other"],
+        rating: resBook.averageRating || 5
+      })
 
-//       //Only save if the book doesn't exist yet
-//       Book.findOne({ title: book.title }, function(err, foundBook) {
-//         if (!foundBook) {
-//           book.save()
-//         }
-//       })
-//     }
-//   })
-// }
+      //Only save if the book doesn't exist yet
+      Book.findOne({ title: book.title }, function(err, foundBook) {
+        if (!foundBook) {
+          book.save()
+        }
+      })
+    }
+  })
+}
 
 
 /*=====================================================
@@ -166,8 +165,8 @@ and your server is running do the following:
 // /*People
 // ----------------------*/
 // //1. Find all the people who are tall (>180) AND rich (>30000)
-// Person.find({height: {$gte: 180}, salary: {$gte: 30000 }})
-//   .exec((err, person) => console.log(person))
+Person.find({height: {$gte: 180}, salary: {$gte: 30000 }})
+  .exec((err, person) => console.log(person))
 // //2. Find all the people who are tall (>180) OR rich (>30000)
 // Person.find({
 //   $or: [
